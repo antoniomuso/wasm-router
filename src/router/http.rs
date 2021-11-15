@@ -1,0 +1,42 @@
+use wasm_bindgen::prelude::*;
+
+#[wasm_bindgen]
+#[repr(usize)]
+#[derive(PartialEq, Eq, Hash, Clone, Copy)]
+pub enum Method {
+  ACL,
+  BIND,
+  CHECKOUT,
+  CONNECT,
+  COPY,
+  DELETE,
+  GET,
+  HEAD,
+  LINK,
+  LOCK,
+  MSEARCH,
+  MERGE,
+  MKACTIVITY,
+  MKCALENDAR,
+  MKCOL,
+  MOVE,
+  NOTIFY,
+  OPTIONS,
+  PATCH,
+  POST,
+  PRI,
+  PROPFIND,
+  PROPPATCH,
+  PURGE,
+  PUT,
+  REBIND,
+  REPORT,
+  SEARCH,
+  SOURCE,
+  SUBSCRIBE,
+  TRACE,
+  UNBIND,
+  UNLINK,
+  UNLOCK,
+  UNSUBSCRIBE,
+}

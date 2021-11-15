@@ -1,0 +1,20 @@
+{
+  "name": "routing-wasm",
+  "version": "1.0.0",
+  "description": "<div align=\"center\">",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "build": "wasm-pack build -t nodejs --dev",
+    "build:release": "wasm-pack build -t nodejs --release"
+  },
+  "volta": {
+    "node": "16.13.0",
+    "npm": "8.1.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
