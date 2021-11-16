@@ -22,7 +22,7 @@ class RouterWrapper {
 
         let out = this.router.on(wasm.Method[method.toUpperCase()], path, this.handlers.length);
 
-        if (out < 0) {
+        if (!out) {
             throw new Error('Insertion error')
         }
 
