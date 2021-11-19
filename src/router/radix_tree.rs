@@ -52,9 +52,6 @@ impl Router {
         let mut current_node = self.trees.get(&method).unwrap();
 
         let mut path = route;
-        let mut idx_in_original_path = 0;
-
-        let mut i = 0;
         loop {
 
             let mut path_len = path.len();
@@ -70,14 +67,11 @@ impl Router {
 
             let prefix_len = prefix.len();
             let mut len = 0;
-            let prev_path = path;
 
             len = long_common_prefix(path, prefix);
 
             if len == prefix_len {
                 path = &path[len..];
-                path_len = path.len();
-                idx_in_original_path += len;
             } else {
                 return Err(JsValue::from("Route does not exist"));
             }
@@ -86,7 +80,6 @@ impl Router {
 
             if let Some (n) = node {
                 current_node = n;
-                i +=1 ;
             }
 
             if len == 0 {

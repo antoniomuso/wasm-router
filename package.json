@@ -16,5 +16,9 @@
     "npm": "8.1.0"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "chalk": "^4.1.2",
+    "find-my-way": "^5.0.0"
+  }
 }
