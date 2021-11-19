@@ -1,3 +1,5 @@
+
+use super::debug::logv;
 use super::http::Method;
 use super::node::{Node, NodeKind};
 use regex::Regex;
@@ -125,7 +127,7 @@ impl Router {
                     curr_node.set_kind(NodeKind::Static);
                 } else {
                     // len is smaller than path_len
-                    let node = Node::new(&path[..len], method,func, NodeKind::Static);
+                    let node = Node::new(&path[len..], method,func, NodeKind::Static);
                     curr_node.add_child(node);
                 }
             } else if len < path_len {

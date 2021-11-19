@@ -38,9 +38,6 @@ class RouterWrapper {
 
         let out = this.router.insert(wasm.Method[method.toUpperCase()], path, this.handlers.length);
 
-        console.log(out);
-
-
         this.handlers.push(handler);
     }
     
@@ -72,5 +69,11 @@ route.insert("Get", '/ciao/bl', () => {
 route.insert("Get", '/c/fratm', () => {
     console.log("fratm");
 });
+
+route.lookup('Get', '/c/fratm');
+route.lookup('Get', '/ciao/bl');
+route.lookup('Get', '/ciao');
+route.lookup('Get', '/ciao/bla');
+
 
 
