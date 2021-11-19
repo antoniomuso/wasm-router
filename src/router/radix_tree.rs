@@ -78,6 +78,8 @@ impl Router {
                 path = &path[len..];
                 path_len = path.len();
                 idx_in_original_path += len;
+            } else {
+                return Err(JsValue::from("Route does not exist"));
             }
 
             let node = current_node.find_matching_child(path);
@@ -85,6 +87,10 @@ impl Router {
             if let Some (n) = node {
                 current_node = n;
                 i +=1 ;
+            }
+
+            if len == 0 {
+                return Err(JsValue::from("Route does not exist"));
             }
 
         }

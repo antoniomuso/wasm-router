@@ -69,11 +69,20 @@ route.insert("Get", '/ciao/bl', () => {
 route.insert("Get", '/c/fratm', () => {
     console.log("fratm");
 });
+route.insert("Get", '/bell/fratm', () => {
+    console.log("bell");
+});
+route.insert("Get", '/bellaaa/fratm', () => {
+    console.log("bell");
+});
+
 
 route.lookup('Get', '/c/fratm');
 route.lookup('Get', '/ciao/bl');
 route.lookup('Get', '/ciao');
 route.lookup('Get', '/ciao/bla');
+// route.lookup('Get', '//fsASrar');
+route.lookup('Get', '/bellaaa/fratm');
 
 
 
