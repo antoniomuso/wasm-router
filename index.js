@@ -58,17 +58,19 @@ class RouterWrapper {
 
 let route = new RouterWrapper();
 route.insert("Get", '/ciao/bla', () => {
-    console.log();
+    console.log('bla');
 });
 
 route.insert("Get", '/ciao', () => {
-    console.log();
+    console.log('ciao');
 });
 
 route.insert("Get", '/ciao/bl', () => {
     console.log("bl");
 });
 
+route.insert("Get", '/c/fratm', () => {
+    console.log("fratm");
+});
 
-route.lookup("Get", '/ciao/bl');
 
