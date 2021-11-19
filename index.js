@@ -44,6 +44,16 @@ class RouterWrapper {
         this.handlers.push(handler);
     }
     
+    lookup (method, path) {
+        if (!method ||  !Object.prototype.hasOwnProperty.call(wasm.Method, method.toUpperCase())) {
+            throw new Error('Wrong method parameter');
+        }
+        if (!path) throw new Error('Path is empty');
+        let out = this.router.lookup(wasm.Method[method.toUpperCase()], path);
+        if (out >= 0) {
+            this.handlers[out]();
+        }
+    }
 }
 
 let route = new RouterWrapper();
@@ -56,7 +66,9 @@ route.insert("Get", '/ciao', () => {
 });
 
 route.insert("Get", '/ciao/bl', () => {
-    console.log();
+    console.log("bl");
 });
 
+
+route.lookup("Get", '/ciao/bl');
 

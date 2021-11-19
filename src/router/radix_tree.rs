@@ -45,7 +45,47 @@ impl Router {
         self.on_bad_url.replace(String::from(on_bad_url));
     }
 
-    pub fn lookup(&self, method: Method, route: &str) {
+    pub fn lookup(&self, method: Method, route: &str) -> Result<usize, JsValue> {
+        // To check the existence 
+        let mut current_node = self.trees.get(&method).unwrap();
+
+        let mut path = route;
+        let mut idx_in_original_path = 0;
+
+        let mut i = 0;
+        loop {
+
+            let mut path_len = path.len();
+            let prefix = &current_node.prefix;
+
+            if path_len == 0 || route == prefix {
+                if let Some(cb) = current_node.callback {
+                    return Ok(cb);
+                }
+                return Err(JsValue::from_str("Route does not exist"));
+            }
+
+
+            let prefix_len = prefix.len();
+            let mut len = 0;
+            let prev_path = path;
+
+            len = long_common_prefix(path, prefix);
+
+            if len == prefix_len {
+                path = &path[len..];
+                path_len = path.len();
+                idx_in_original_path += len;
+            }
+
+            let node = current_node.find_matching_child(path);
+
+            if let Some (n) = node {
+                current_node = n;
+                i +=1 ;
+            }
+
+        }
         // TO implement
     }
 

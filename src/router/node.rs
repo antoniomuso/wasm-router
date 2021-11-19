@@ -80,6 +80,24 @@ impl Node {
       None
     }
 
+    pub fn find_child(& self, character: u8) -> Option<&Node> {
+      for node in self.child_nodes.iter() {
+        if node.prefix.as_bytes()[0] == character {
+          return Some(node);
+        }
+      }
+      None
+    }
+
+    pub fn find_matching_child (&self, path: &str) -> Option<& Node> {
+      for n in self.child_nodes.iter() {
+        if path.len() >= n.prefix.len() && path[..n.prefix.len()] == n.prefix {
+          return Some(n);
+        }
+      }
+      None
+    }
+
     pub fn set_kind(&mut self, kind :NodeKind) {
       self.node_kind = kind;
     }
