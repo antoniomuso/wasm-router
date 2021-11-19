@@ -1,6 +1,8 @@
+use std::cell::RefMut;
+
 use super::http::Method;
 
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub enum NodeKind {
     Static,
     Param,
@@ -25,6 +27,7 @@ pub enum NodeError {
   NotSplitted,
 }
 
+#[derive(Debug)]
 pub struct Node {
     pub prefix: String,
     pub method: Method,
@@ -60,6 +63,12 @@ impl Node {
 
     pub fn set_cb(&mut self, handler: usize) {
       self.callback = Some(handler);
+    }
+
+    pub fn child_starting_with_character(& self, character: u8) -> bool {
+      self.child_nodes.iter().any(|node| {
+        node.prefix.bytes().next().unwrap() == character
+      })
     }
 
     pub fn find_child_with_starting_character(& mut self, character: u8) -> Option<&mut Node> {

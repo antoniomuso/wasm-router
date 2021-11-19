@@ -7,6 +7,7 @@ use wasm_bindgen::prelude::*;
 const OPTIONAL_PARAM_REGEXP: &str = r"(/:[^/()]*?)\?(/?)";
 
 #[wasm_bindgen]
+#[derive(Debug)]
 pub struct Router {
     default_route: Option<String>,
     on_bad_url: Option<String>,
@@ -29,7 +30,6 @@ impl Default for Router {
 }
 
 #[wasm_bindgen]
-#[feature(nll)]
 impl Router {
     pub fn new() -> Self {
         Router {
@@ -49,7 +49,7 @@ impl Router {
         // TO implement
     }
 
-    fn insert(&mut self, method: Method, path: &str, func: usize) -> u32 {
+    pub fn insert(&mut self, method: Method, path: &str, func: usize) -> JsValue {
         assert!(!path.is_empty(), "route is empty");
 
         let root = self.trees.get_mut(&method);
@@ -91,14 +91,16 @@ impl Router {
             } else if len < path_len {
                 path = &path[len..];
 
+                let char = path.bytes().next().unwrap();
                 // At the moment we iterate all label, we don't use hashmap
-                if let Some(node) = curr_node.find_child_with_starting_character(path.bytes().next().unwrap()) {
-                    curr_node = node;
+                if !curr_node.child_starting_with_character(char) {
+                    let node = Node::new(path, method,func, NodeKind::Static);
+                    curr_node.add_child(node);
+                } else {
+                    curr_node = curr_node.find_child_with_starting_character(char).unwrap();
                     continue;
                 }
-
-                let node = Node::new(path, method,func, NodeKind::Static);
-                curr_node.add_child(node);
+                
             } else {
                 // here the node exist, at the moment we overwrite the handler in next implementation we need to use an handler array
                 curr_node.set_cb(func);
@@ -106,7 +108,7 @@ impl Router {
             break;
         }
 
-        0
+        JsValue::from_str(&format!("{:?}", &self))
     }
 
     pub fn on(&mut self, method: Method, path: &str, handler: usize) -> bool {
