@@ -54,7 +54,7 @@ impl Router {
         let mut path = route;
         loop {
 
-            let mut path_len = path.len();
+            let path_len = path.len();
             let prefix = &current_node.prefix;
 
             if path_len == 0 || path == prefix {
@@ -66,11 +66,10 @@ impl Router {
 
 
             let prefix_len = prefix.len();
-            let mut len = 0;
 
-            len = long_common_prefix(path, prefix);
+            let len = long_common_prefix(path, prefix);
             
-            if len == prefix_len {
+            if len == prefix_len && len != 0 {
                 path = &path[len..];
             } else {
                 return Err(JsValue::from("Route does not exist"));
@@ -79,10 +78,6 @@ impl Router {
             let node = current_node.find_matching_child(path);
             if let Some (n) = node {
                 current_node = n;
-            }
-
-            if len == 0 {
-                return Err(JsValue::from("Route does not exist"));
             }
 
         }
