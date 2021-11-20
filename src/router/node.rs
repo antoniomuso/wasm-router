@@ -19,7 +19,7 @@ macro_rules! reset {
         $node.prefix = String::from($prefix);
         $node.callback = None;
         $node.node_kind = NodeKind::Static;
-        $node.child_nodes = FnvHashMap::with_capacity_and_hasher(10, Default::default());
+        $node.child_nodes = FnvHashMap::with_capacity_and_hasher(256, Default::default());
     };
 }
 

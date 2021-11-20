@@ -1,6 +1,7 @@
 use super::debug::logv;
 use super::http::Method;
 use super::node::{Node, NodeKind};
+use fnv::FnvHashMap;
 use regex::Regex;
 use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
@@ -14,7 +15,7 @@ pub struct Router {
     on_bad_url: Option<String>,
     ignore_trailing_slash: bool,
     // To refactor from hashmap to array
-    trees: HashMap<Method, Node>,
+    trees: FnvHashMap<Method, Node>,
     optional_regex: Regex,
 }
 
@@ -23,7 +24,7 @@ impl Default for Router {
         Self {
             default_route: Default::default(),
             on_bad_url: Default::default(),
-            trees: Default::default(),
+            trees: FnvHashMap::with_capacity_and_hasher(256, Default::default()),
             ignore_trailing_slash: Default::default(),
             optional_regex: Regex::new(OPTIONAL_PARAM_REGEXP).unwrap(),
         }
