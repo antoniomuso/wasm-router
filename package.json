@@ -9,7 +9,9 @@
   "scripts": {
     "start": "node index.js",
     "build": "wasm-pack build -t nodejs --dev",
-    "build:release": "wasm-pack build -t nodejs --release"
+    "build:release": "wasm-pack build -t nodejs --release",
+    "test": "wasm-pack test --node",
+    "bench": "node ./benchmarks/with_cronometro.mjs"
   },
   "volta": {
     "node": "16.13.0",
