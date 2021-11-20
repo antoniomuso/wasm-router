@@ -24,7 +24,7 @@ impl Default for Router {
         Self {
             default_route: Default::default(),
             on_bad_url: Default::default(),
-            trees: FnvHashMap::with_capacity_and_hasher(256, Default::default()),
+            trees: FnvHashMap::with_capacity_and_hasher(35, Default::default()),
             ignore_trailing_slash: Default::default(),
             optional_regex: Regex::new(OPTIONAL_PARAM_REGEXP).unwrap(),
         }
