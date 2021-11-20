@@ -55,16 +55,15 @@ impl Router {
             let path_len = path.len();
             let prefix = &current_node.prefix;
 
-            if path_len == 0 || path == prefix {
+            let prefix_len = prefix.len();
+            let len = long_common_prefix(path, prefix);
+
+            if path_len == 0 || (len == path_len && len == prefix_len) {
                 if let Some(cb) = current_node.callback {
                     return Ok(cb);
                 }
                 return Err(JsValue::from_str("Route does not exist"));
             }
-
-            let prefix_len = prefix.len();
-
-            let len = long_common_prefix(path, prefix);
 
             if len != prefix_len || len == 0 {
                 return Err(JsValue::from("Route does not exist"));

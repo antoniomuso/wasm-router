@@ -84,7 +84,7 @@ impl Node {
     pub fn find_matching_child (&self, path: &str) -> Option<& Node> {
       let node = self.child_nodes.get(&path.as_bytes()[0]);
       if let Some(n) = node {
-        if path.len() >= n.prefix.len() && &path[..n.prefix.len()] == &n.prefix {
+        if path.len() >= n.prefix.len() {
           return Some(n);
         }
       } 

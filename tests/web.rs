@@ -9,11 +9,6 @@ use wasm_bindgen_test::*;
 use routing_wasm::router::{http::Method, radix_tree::Router};
 
 #[wasm_bindgen_test]
-fn pass() {
-    assert_eq!(1 + 1, 2);
-}
-
-#[wasm_bindgen_test]
 fn test_insert () {
     let mut router = Router::new();
     router.insert(Method::GET, "/ciao/bla", 0);
@@ -39,12 +34,37 @@ fn test_insert () {
     assert_eq!(router.lookup(Method::GET, "/ciao/blo").is_err(), true);
 }
 
+#[wasm_bindgen_test]
+fn test_insert_post () {
+    let mut router = Router::new();
+    router.insert(Method::GET, "/ciao/bla", 0);
+    router.insert(Method::GET, "/ciao", 1);
+    router.insert(Method::POST, "/ciao/bl", 2);
+    router.insert(Method::GET, "/c/fratm", 3);
+    router.insert(Method::GET, "/bell/fratm", 4);
+    router.insert(Method::GET, "/bellaaa/fratm", 5);
+
+    assert_eq!(router.lookup(Method::GET, "/c/fratm").unwrap(), 3);
+    assert_eq!(router.lookup(Method::POST, "/ciao/bl").unwrap(), 2);
+    assert_eq!(router.lookup(Method::GET, "/ciao").unwrap(), 1);
+    assert_eq!(router.lookup(Method::GET, "/ciao/bla").unwrap(), 0);
+
+    assert_eq!(router.lookup(Method::GET, "/ciao/bl").is_err(), true);
+    assert_eq!(router.lookup(Method::GET, "/bellaa/fratm").is_err(), true);
+    assert_eq!(router.lookup(Method::GET, "/bedsadsllaa/fratm").is_err(), true);
+    assert_eq!(router.lookup(Method::GET, "//fratm").is_err(), true);
+    assert_eq!(router.lookup(Method::GET, "//sdiofjdsifjsdi").is_err(), true);
+
+    assert_eq!(router.lookup(Method::GET, "/ciao/blooooooo").is_err(), true);
+}
+
+
 /*
 let route = new RouterWrapper();
 route.insert("Get", '/ciao/bla', () => {
     console.log('bla');
 });
-
+'/posts'
 route.insert("Get", '/ciao', () => {
     console.log('ciao');
 });
