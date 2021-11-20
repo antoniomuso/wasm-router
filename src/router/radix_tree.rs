@@ -66,15 +66,14 @@ impl Router {
 
             let len = long_common_prefix(path, prefix);
 
-            if len == prefix_len && len != 0 {
-                path = &path[len..];
-
-                let node = current_node.find_matching_child(path);
-                if let Some(n) = node {
-                    current_node = n;
-                }
-            } else {
+            if len != prefix_len || len == 0 {
                 return Err(JsValue::from("Route does not exist"));
+            }
+
+            path = &path[len..];
+
+            if let Some(n) = current_node.find_matching_child(path) {
+                current_node = n;
             }
         }
         // TO CONTINUE
