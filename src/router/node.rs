@@ -1,5 +1,7 @@
 use std::{cell::RefMut, collections::HashMap};
 
+use fnv::FnvHashMap;
+
 use super::{debug::logv, http::Method};
 
 #[derive(Clone, Copy, Debug)]
@@ -17,7 +19,7 @@ macro_rules! reset {
         $node.prefix = String::from($prefix);
         $node.callback = None;
         $node.node_kind = NodeKind::Static;
-        $node.child_nodes = HashMap::new();
+        $node.child_nodes = FnvHashMap::with_capacity_and_hasher(10, Default::default());
     };
 }
 
@@ -32,13 +34,13 @@ pub struct Node {
     pub prefix: String,
     pub method: Method,
     pub callback: Option<usize>,
-    pub child_nodes: HashMap<u8, Node>,
+    pub child_nodes: FnvHashMap<u8, Node>,
     pub node_kind: NodeKind,
 }
 
 impl Node {
     pub fn new(prefix: &str, method: Method, callback: usize, node_kind: NodeKind) -> Node {
-      Node { prefix: String::from(prefix), method: method, callback: Some(callback), child_nodes: HashMap::new(), node_kind: node_kind }
+      Node { prefix: String::from(prefix), method: method, callback: Some(callback), child_nodes: FnvHashMap::with_capacity_and_hasher(256, Default::default()), node_kind: node_kind }
     }
 
     pub fn split(&mut self, len: usize) -> Result<&mut Node, NodeError> {
@@ -46,10 +48,11 @@ impl Node {
          return Err(NodeError::NotSplitted);
        }
 
+        let hash = FnvHashMap::with_capacity_and_hasher(256, Default::default());
         // We create new node with last part of prefix
         let new_node = Node {
             prefix: String::from(&self.prefix[len..]),
-            child_nodes: std::mem::replace(&mut self.child_nodes, HashMap::new()),
+            child_nodes: std::mem::replace(&mut self.child_nodes, hash),
             callback: self.callback,
             method: self.method,
             node_kind: self.node_kind,

@@ -1,4 +1,3 @@
-
 use super::debug::logv;
 use super::http::Method;
 use super::node::{Node, NodeKind};
@@ -48,12 +47,11 @@ impl Router {
     }
 
     pub fn lookup(&self, method: Method, route: &str) -> Result<usize, JsValue> {
-        // To check the existence 
+        // To check the existence
         let mut current_node = self.trees.get(&method).unwrap();
 
         let mut path = route;
         loop {
-
             let path_len = path.len();
             let prefix = &current_node.prefix;
 
@@ -64,22 +62,20 @@ impl Router {
                 return Err(JsValue::from_str("Route does not exist"));
             }
 
-
             let prefix_len = prefix.len();
 
             let len = long_common_prefix(path, prefix);
-            
+
             if len == prefix_len && len != 0 {
                 path = &path[len..];
+
+                let node = current_node.find_matching_child(path);
+                if let Some(n) = node {
+                    current_node = n;
+                }
             } else {
                 return Err(JsValue::from("Route does not exist"));
             }
-
-            let node = current_node.find_matching_child(path);
-            if let Some (n) = node {
-                current_node = n;
-            }
-
         }
         // TO implement
     }
@@ -91,7 +87,7 @@ impl Router {
 
         let mut curr_node = match root {
             None => {
-                let node = Node::new(path, method,func, NodeKind::Static);
+                let node = Node::new(path, method, func, NodeKind::Static);
                 self.trees.insert(method, node);
                 self.trees.get_mut(&method).unwrap()
             }
@@ -120,7 +116,7 @@ impl Router {
                     curr_node.set_kind(NodeKind::Static);
                 } else {
                     // len is smaller than path_len
-                    let node = Node::new(&path[len..], method,func, NodeKind::Static);
+                    let node = Node::new(&path[len..], method, func, NodeKind::Static);
                     curr_node.add_child(node);
                 }
             } else if len < path_len {
@@ -129,13 +125,12 @@ impl Router {
                 let char = path.as_bytes()[0];
                 // At the moment we iterate all label, we don't use hashmap
                 if !curr_node.child_starting_with_character(char) {
-                    let node = Node::new(path, method,func, NodeKind::Static);
+                    let node = Node::new(path, method, func, NodeKind::Static);
                     curr_node.add_child(node);
                 } else {
                     curr_node = curr_node.find_child_with_starting_character(char).unwrap();
                     continue;
                 }
-                
             } else {
                 // here the node exist, at the moment we overwrite the handler in next implementation we need to use an handler array
                 curr_node.set_cb(func);

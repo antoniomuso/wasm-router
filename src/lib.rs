@@ -1,5 +1,5 @@
 mod utils;
-mod router;
+pub mod router;
 
 use wasm_bindgen::prelude::*;
 
