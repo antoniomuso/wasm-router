@@ -18,7 +18,27 @@ const routes = [
   { method: 'GET', url: '/map/:location/events' },
   { method: 'GET', url: '/status' },
   { method: 'GET', url: '/very/deeply/nested/route/hello/there' },
-  { method: 'GET', url: '/static/*' }
+  { method: 'GET', url: '/static/*' },
+  { method: 'GET', url: '/user/:id' },
+  { method: 'GET', url: '/user/:id/static' },
+  { method: 'POST', url: '/user/:id' },
+  { method: 'PUT', url: '/user/:id' },
+  { method: 'GET', url: '/customer/:name-:surname' },
+  { method: 'POST', url: '/customer' },
+  { method: 'GET', url: '/at/:hour(^\\d+)h:minute(^\\d+)m' },
+  { method: 'GET', url: '/abc/def/ghi/lmn/opq/rst/uvz' },
+  { method: 'GET', url: '/products' },
+  { method: 'GET', url: '/products/:id' },
+  { method: 'GET', url: '/products/:id/options' },
+  { method: 'GET', url: '/posts' },
+  { method: 'POST', url: '/posts' },
+  { method: 'GET', url: '/posts/:id' },
+  { method: 'GET', url: '/posts/:id/author' },
+  { method: 'GET', url: '/posts/:id/comments' },
+  { method: 'POST', url: '/posts/:id/comments' },
+  { method: 'GET', url: '/posts/:id/comments/:id' },
+  { method: 'GET', url: '/posts/:id/comments/:id/author' },
+  { method: 'GET', url: '/posts/:id/counter' },
 ]
 
 function noop () {}
