@@ -25,7 +25,10 @@ fn test_insert () {
 
     assert_eq!(router.lookup(Method::GET, "/c/fratm").unwrap(), 3);
     assert_eq!(router.lookup(Method::GET, "/ciao/bl").unwrap(), 2);
+    assert_eq!(router.lookup(Method::GET, "/ciao/bl").unwrap(), 2);
     assert_eq!(router.lookup(Method::GET, "/ciao").unwrap(), 1);
+    assert_eq!(router.lookup(Method::GET, "/ciao").unwrap(), 1);
+    assert_eq!(router.lookup(Method::GET, "/ciao/bla").unwrap(), 0);
     assert_eq!(router.lookup(Method::GET, "/ciao/bla").unwrap(), 0);
 
     assert_eq!(router.lookup(Method::GET, "/bellaa/fratm").is_err(), true);
