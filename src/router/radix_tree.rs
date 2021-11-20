@@ -57,7 +57,7 @@ impl Router {
             let mut path_len = path.len();
             let prefix = &current_node.prefix;
 
-            if path_len == 0 || route == prefix {
+            if path_len == 0 || path == prefix {
                 if let Some(cb) = current_node.callback {
                     return Ok(cb);
                 }
@@ -69,7 +69,7 @@ impl Router {
             let mut len = 0;
 
             len = long_common_prefix(path, prefix);
-
+            
             if len == prefix_len {
                 path = &path[len..];
             } else {
@@ -77,7 +77,6 @@ impl Router {
             }
 
             let node = current_node.find_matching_child(path);
-
             if let Some (n) = node {
                 current_node = n;
             }
@@ -132,7 +131,7 @@ impl Router {
             } else if len < path_len {
                 path = &path[len..];
 
-                let char = path.bytes().next().unwrap();
+                let char = path.as_bytes()[0];
                 // At the moment we iterate all label, we don't use hashmap
                 if !curr_node.child_starting_with_character(char) {
                     let node = Node::new(path, method,func, NodeKind::Static);
@@ -207,7 +206,6 @@ impl Router {
     }
 }
 
-#[inline]
 fn long_common_prefix(str1: &str, str2: &str) -> usize {
     let arr1 = str1.as_bytes();
     let arr2 = str2.as_bytes();

@@ -1,6 +1,6 @@
-use std::cell::RefMut;
+use std::{cell::RefMut, collections::HashMap};
 
-use super::http::Method;
+use super::{debug::logv, http::Method};
 
 #[derive(Clone, Copy, Debug)]
 pub enum NodeKind {
@@ -17,7 +17,7 @@ macro_rules! reset {
         $node.prefix = String::from($prefix);
         $node.callback = None;
         $node.node_kind = NodeKind::Static;
-        $node.child_nodes = vec![];
+        $node.child_nodes = HashMap::new();
     };
 }
 
@@ -32,13 +32,13 @@ pub struct Node {
     pub prefix: String,
     pub method: Method,
     pub callback: Option<usize>,
-    pub child_nodes: Vec<Node>,
+    pub child_nodes: HashMap<u8, Node>,
     pub node_kind: NodeKind,
 }
 
 impl Node {
     pub fn new(prefix: &str, method: Method, callback: usize, node_kind: NodeKind) -> Node {
-      Node { prefix: String::from(prefix), method: method, callback: Some(callback), child_nodes: vec![], node_kind: node_kind }
+      Node { prefix: String::from(prefix), method: method, callback: Some(callback), child_nodes: HashMap::new(), node_kind: node_kind }
     }
 
     pub fn split(&mut self, len: usize) -> Result<&mut Node, NodeError> {
@@ -49,7 +49,7 @@ impl Node {
         // We create new node with last part of prefix
         let new_node = Node {
             prefix: String::from(&self.prefix[len..]),
-            child_nodes: std::mem::replace(&mut self.child_nodes, vec![]),
+            child_nodes: std::mem::replace(&mut self.child_nodes, HashMap::new()),
             callback: self.callback,
             method: self.method,
             node_kind: self.node_kind,
@@ -57,8 +57,9 @@ impl Node {
 
         // The old node will be a middle node
         reset!(self, &self.prefix[..len]);
+        let key = new_node.prefix.as_bytes()[0];
         self.add_child(new_node);
-        Ok(self.child_nodes.last_mut().unwrap())
+        Ok(self.child_nodes.get_mut(&key).unwrap())
     }
 
     pub fn set_cb(&mut self, handler: usize) {
@@ -66,35 +67,24 @@ impl Node {
     }
 
     pub fn child_starting_with_character(& self, character: u8) -> bool {
-      self.child_nodes.iter().any(|node| {
-        node.prefix.bytes().next().unwrap() == character
-      })
+      self.child_nodes.contains_key(&character)
     }
 
     pub fn find_child_with_starting_character(& mut self, character: u8) -> Option<&mut Node> {
-      for node in self.child_nodes.iter_mut() {
-        if node.prefix.as_bytes()[0] == character {
-          return Some(node);
-        }
-      }
-      None
+      self.child_nodes.get_mut(&character)
     }
 
     pub fn find_child(& self, character: u8) -> Option<&Node> {
-      for node in self.child_nodes.iter() {
-        if node.prefix.as_bytes()[0] == character {
-          return Some(node);
-        }
-      }
-      None
+      self.child_nodes.get(&character)
     }
 
     pub fn find_matching_child (&self, path: &str) -> Option<& Node> {
-      for n in self.child_nodes.iter() {
-        if path.len() >= n.prefix.len() && path[..n.prefix.len()] == n.prefix {
+      let node = self.child_nodes.get(&path.as_bytes()[0]);
+      if let Some(n) = node {
+        if path.len() >= n.prefix.len() && &path[..n.prefix.len()] == &n.prefix {
           return Some(n);
         }
-      }
+      } 
       None
     }
 
@@ -108,6 +98,6 @@ impl Node {
 
     pub fn add_child(&mut self, node: Node) {
         // TODO
-        self.child_nodes.push(node);
+        self.child_nodes.insert(node.prefix.as_bytes()[0], node);
     }
 }
