@@ -3,7 +3,6 @@ use super::http::Method;
 use super::node::{Node, NodeKind};
 use fnv::FnvHashMap;
 use regex::Regex;
-use std::collections::HashMap;
 use wasm_bindgen::prelude::*;
 
 const OPTIONAL_PARAM_REGEXP: &str = r"(/:[^/()]*?)\?(/?)";
@@ -78,7 +77,7 @@ impl Router {
                 return Err(JsValue::from("Route does not exist"));
             }
         }
-        // TO implement
+        // TO CONTINUE
     }
 
     pub fn insert(&mut self, method: Method, path: &str, func: usize) -> JsValue {
@@ -143,6 +142,7 @@ impl Router {
     }
 
     pub fn on(&mut self, method: Method, path: &str, handler: usize) -> bool {
+        // TODO
         if path.is_empty() {
             return false;
         }
@@ -179,6 +179,8 @@ impl Router {
 
     #[wasm_bindgen]
     pub fn iter_on(&mut self, method: Method, path: &str, handler: usize) -> bool {
+        // TODO
+
         // Todo Checks
         let mut curr_path: String = String::from(path);
         let mut len = curr_path.len();
