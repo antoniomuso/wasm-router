@@ -1,6 +1,6 @@
+use super::child_struct::ByteIndexable;
 use super::http::Method;
 use super::node::{Node, NodeKind};
-use fnv::FnvHashMap;
 use regex::Regex;
 use wasm_bindgen::prelude::*;
 
@@ -12,7 +12,7 @@ pub struct Router {
     default_route: Option<String>,
     on_bad_url: Option<String>,
     ignore_trailing_slash: bool,
-    trees: FnvHashMap<Method, Node>,
+    trees: ByteIndexable<Node>,
     optional_regex: Regex,
 }
 
@@ -21,7 +21,7 @@ impl Default for Router {
         Self {
             default_route: Default::default(),
             on_bad_url: Default::default(),
-            trees: FnvHashMap::with_capacity_and_hasher(35, Default::default()),
+            trees: ByteIndexable::new(),
             ignore_trailing_slash: Default::default(),
             optional_regex: Regex::new(OPTIONAL_PARAM_REGEXP).unwrap(),
         }
@@ -47,7 +47,7 @@ impl Router {
     pub fn lookup(&self, method: Method, route: &str) -> Result<usize, JsValue> {
         // To check the existence
         let mut current_node;
-        if let Some(n) = self.trees.get(&method) {
+        if let Some(n) = self.trees.get(method as u8) {
             current_node = n;
         } else {
             return Err(JsValue::from_str("Route does not exist"));
@@ -85,13 +85,13 @@ impl Router {
     pub fn insert(&mut self, method: Method, path: &str, func: usize) -> JsValue {
         assert!(!path.is_empty(), "route is empty");
 
-        let root = self.trees.get_mut(&method);
+        let root = self.trees.get_mut(method as u8);
 
         let mut curr_node = match root {
             None => {
                 let node = Node::new(path, method, func, NodeKind::Static);
-                self.trees.insert(method, node);
-                self.trees.get_mut(&method).unwrap()
+                self.trees.add(method as u8, node);
+                self.trees.get_mut(method as u8).unwrap()
             }
             Some(node) => node,
         };
