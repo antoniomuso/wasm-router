@@ -3,7 +3,7 @@ const wasm = require('./pkg/routing_wasm')
 
 class RouterWrapper {
     constructor() {
-        this.router = wasm.Router.new();
+        this.router = new wasm.Router();
         this.handlers = [];
     }   
     

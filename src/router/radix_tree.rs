@@ -30,6 +30,7 @@ impl Default for Router {
 
 #[wasm_bindgen]
 impl Router {
+    #[wasm_bindgen(constructor)]
     pub fn new() -> Self {
         Router {
             ..Default::default()
@@ -202,20 +203,11 @@ impl Router {
 }
 
 fn long_common_prefix(str1: &str, str2: &str) -> usize {
-    let arr1 = str1.as_bytes();
-    let arr2 = str2.as_bytes();
-
-    let min = if arr1.len() < arr2.len() {
-        arr1.len()
-    } else {
-        arr2.len()
-    };
-
-    for i in 0..min {
-        if arr1[i] != arr2[i] {
-            return i;
+    for (n, (c1, c2)) in str1.bytes().zip(str2.bytes()).enumerate() {
+        if c1 != c2 {
+            return n;
         }
     }
 
-    min
+    if str1.len() < str2.len() { str1.len() } else { str2.len() }
 }
