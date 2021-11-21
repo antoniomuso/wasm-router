@@ -46,7 +46,13 @@ impl Router {
 
     pub fn lookup(&self, method: Method, route: &str) -> Result<usize, JsValue> {
         // To check the existence
-        let mut current_node = self.trees.get(&method).unwrap();
+        let mut current_node;
+        if let Some(n) = self.trees.get(&method) {
+            current_node = n;
+        } else {
+            return Err(JsValue::from_str("Route does not exist"));
+        }
+
 
         let mut path = route;
         loop {

@@ -53,6 +53,7 @@ fn test_insert_post () {
     assert_eq!(router.lookup(Method::GET, "/bellaa/fratm").is_err(), true);
     assert_eq!(router.lookup(Method::GET, "/bedsadsllaa/fratm").is_err(), true);
     assert_eq!(router.lookup(Method::GET, "//fratm").is_err(), true);
+    assert_eq!(router.lookup(Method::PUT, "/bell/fratm").is_err(), true);
     assert_eq!(router.lookup(Method::GET, "//sdiofjdsifjsdi").is_err(), true);
 
     assert_eq!(router.lookup(Method::GET, "/ciao/blooooooo").is_err(), true);
