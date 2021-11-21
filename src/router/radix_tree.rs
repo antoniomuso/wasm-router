@@ -1,4 +1,3 @@
-use super::debug::logv;
 use super::http::Method;
 use super::node::{Node, NodeKind};
 use fnv::FnvHashMap;
@@ -13,7 +12,6 @@ pub struct Router {
     default_route: Option<String>,
     on_bad_url: Option<String>,
     ignore_trailing_slash: bool,
-    // To refactor from hashmap to array
     trees: FnvHashMap<Method, Node>,
     optional_regex: Regex,
 }
