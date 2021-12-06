@@ -28,3 +28,13 @@ long static: 4.189.161 ops/sec
 As you can see from flame graph, the time majority was spent running the javascript code, in particular, the time was spent in the passing strings between Rust and Javascript.
 The effective execution of Rust code is a little part of the flame graph.
 
+Optimizing the string copy by caching is possible, modifying the glue code.
+
+```
+=======================
+ wasm-router benchmark
+=======================
+short static: 5.821.372 ops/sec
+long static: 6.001.407 ops/sec
+```
+This increases the long static matching reducing the short.

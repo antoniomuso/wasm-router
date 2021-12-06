@@ -1,4 +1,4 @@
-const wasm = require('./pkg/routing_wasm')
+const wasm = require('./glue/routing_wasm')
 
 
 class RouterWrapper {
